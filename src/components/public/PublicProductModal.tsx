@@ -186,6 +186,20 @@ export default function PublicProductModal({ isOpen, onClose, product }: PublicP
               </button>
             )}
             <h2 className="text-2xl font-bold text-gray-900 pr-8">{product.name}</h2>
+            
+            {product.is_preorder && (
+              <div className="mt-3 inline-flex flex-col bg-orange-50 border border-orange-100 p-3 rounded-lg">
+                <span className="text-orange-800 font-bold text-sm uppercase tracking-wider flex items-center gap-1.5">
+                  📦 Produto Sob Encomenda
+                </span>
+                {product.preorder_notice && (
+                  <span className="text-orange-700 text-sm mt-1">
+                    {product.preorder_notice}
+                  </span>
+                )}
+              </div>
+            )}
+            
             <p className="text-gray-500 mt-2 text-sm leading-relaxed">{product.description}</p>
             <div className="mt-3 flex items-center gap-2">
               {product.originalPrice && product.originalPrice > product.price && (

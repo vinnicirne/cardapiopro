@@ -7,7 +7,7 @@ interface ImageCropperModalProps {
   isOpen: boolean;
   imageSrc: string;
   aspectRatio: number; // 1 for square (logo), 3 for cover (3:1 roughly)
-  objectFit?: 'contain' | 'horizontal-cover' | 'vertical-cover' | 'auto-cover';
+  objectFit?: 'contain' | 'horizontal-cover' | 'vertical-cover' | 'cover';
   onClose: () => void;
   onCropComplete: (croppedFile: File) => void;
 }
@@ -16,7 +16,7 @@ export default function ImageCropperModal({
   isOpen, 
   imageSrc, 
   aspectRatio, 
-  objectFit = 'contain',
+  objectFit = 'cover',
   onClose, 
   onCropComplete 
 }: ImageCropperModalProps) {
@@ -25,7 +25,7 @@ export default function ImageCropperModal({
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const onCropCompleteInternal = useCallback((croppedArea: any, croppedAreaPixels: any) => {
+  const onCropCompleteInternal = useCallback((_croppedArea: any, croppedAreaPixels: any) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 

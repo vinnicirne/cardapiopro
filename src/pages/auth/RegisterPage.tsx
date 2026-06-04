@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../store/authStore';
@@ -13,6 +13,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { setUser } = useAuthStore();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -41,7 +42,9 @@ export default function RegisterPage() {
           name: storeName,
           slug: storeSlug,
           owner_email: email
-        }]);
+        }])
+        .select()
+        .single();
 
       if (storeError) {
         setError('Erro ao criar loja. O slug pode já estar em uso.');
@@ -51,6 +54,21 @@ export default function RegisterPage() {
       }
 
       setUser(authData.user);
+
+      // Redirecionamento Dinâmico para Checkout
+      const checkoutUrl = searchParams.get('checkout');
+      if (checkoutUrl && storeData) {
+        try {
+          const url = new URL(checkoutUrl);
+          url.searchParams.set('email', email);
+          url.searchParams.set('src', storeData.id);
+          window.location.href = url.toString();
+          return;
+        } catch (e) {
+          console.error("Link de checkout inválido", e);
+        }
+      }
+
       navigate('/dashboard');
     }
   };

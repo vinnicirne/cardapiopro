@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import { LayoutDashboard, Package, Settings, LogOut, Menu, MapPin, Shield, QrCode } from 'lucide-react';
+import { LayoutDashboard, Package, Settings, LogOut, Menu, MapPin, Shield, QrCode, CreditCard } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../store/authStore';
 import { QrCodeModal } from '../../components/dashboard/QrCodeModal';
@@ -21,6 +21,7 @@ export default function DashboardLayout() {
     { name: 'Áreas de Entrega', path: '/dashboard/delivery-areas', icon: <MapPin className="w-5 h-5" /> },
     { name: 'Clientes', path: '/dashboard/customers', icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg> },
     { name: 'Cupons', path: '/dashboard/coupons', icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /></svg> },
+    { name: 'Minha Assinatura', path: '/dashboard/subscription', icon: <CreditCard className="w-5 h-5" /> },
     { name: 'Configurações', path: '/dashboard/settings', icon: <Settings className="w-5 h-5" /> },
   ];
 
@@ -28,9 +29,12 @@ export default function DashboardLayout() {
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
-        <div className="p-6 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-900 truncate" title={store?.name}>{store?.name || 'Carregando...'}</h1>
-          <p className="text-sm text-gray-500">Área do Lojista</p>
+        <div className="p-6 border-b border-gray-200 flex items-center justify-center">
+          <img src="/logo.png" alt="Cardápio Pro" className="h-12 w-auto" />
+        </div>
+        <div className="p-4 border-b border-gray-100 bg-gray-50/50">
+          <h2 className="text-sm font-bold text-gray-900 truncate" title={store?.name}>{store?.name || 'Carregando...'}</h2>
+          <p className="text-xs text-gray-500">Área do Lojista</p>
         </div>
         <nav className="flex-1 p-4 space-y-1">
           {navItems.map(item => {

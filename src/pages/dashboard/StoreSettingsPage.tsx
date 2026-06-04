@@ -115,7 +115,7 @@ export default function StoreSettingsPage() {
     const fileExt = file.name.split('.').pop() || 'jpeg';
     const fileName = `${store.id}/${type}-${Date.now()}.${fileExt}`;
     
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from('store-assets')
       .upload(fileName, file);
       

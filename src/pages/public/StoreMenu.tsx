@@ -76,7 +76,9 @@ export default function StoreMenu() {
             price: p.price,
             originalPrice: p.original_price,
             categoryId: p.category_id,
-            imageUrl: p.image_url
+            imageUrl: p.image_url,
+            is_preorder: p.is_preorder,
+            preorder_notice: p.preorder_notice
           })));
         }
       }
@@ -144,7 +146,14 @@ export default function StoreMenu() {
                       className={`bg-white rounded-xl p-4 flex gap-4 shadow-sm border border-gray-100 transition-shadow group ${isOpen ? 'hover:shadow-md cursor-pointer' : 'opacity-70 cursor-not-allowed'}`}
                     >
                       <div className="flex-1">
-                        <h3 className="font-medium text-gray-900 group-hover:text-primary transition-colors">{product.name}</h3>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-medium text-gray-900 group-hover:text-primary transition-colors">{product.name}</h3>
+                          {product.is_preorder && (
+                            <span className="bg-orange-100 text-orange-700 text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                              Sob Encomenda
+                            </span>
+                          )}
+                        </div>
                         <p className="text-sm text-gray-500 line-clamp-2 mt-1">{product.description}</p>
                         <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                           {product.originalPrice && product.originalPrice > product.price && (

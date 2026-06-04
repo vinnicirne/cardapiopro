@@ -12,6 +12,14 @@ export interface Store {
   delivery_fee?: number;
   is_open?: boolean;
   opening_hours?: Record<string, { isOpen: boolean; open: string; close: string }>;
+  plan_id?: string;
+  plan?: {
+    id: string;
+    name: string;
+    price: number;
+    max_products: number;
+    features: string[];
+  };
 }
 
 interface AuthState {

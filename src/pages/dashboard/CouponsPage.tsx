@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Ticket, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../store/authStore';
+import PremiumFeatureOverlay from '../../components/dashboard/PremiumFeatureOverlay';
 
 export interface Coupon {
   id: string;
@@ -111,9 +112,19 @@ export default function CouponsPage() {
 
   if (loading) return <div className="p-8 text-center text-gray-500">Carregando cupons...</div>;
 
+  // Bloqueio do Plano Básico
+  const isFreePlan = !store?.plan || store.plan.price <= 0;
+
   return (
-    <div className="max-w-5xl mx-auto pb-12">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <div className="relative h-full">
+      {isFreePlan && (
+        <PremiumFeatureOverlay 
+          title="Sistema de Cupons" 
+          description="Crie campanhas de marketing, atraia novos clientes e fidelize os antigos com cupons de desconto. Recurso exclusivo do Plano Profissional." 
+        />
+      )}
+      <div className={`max-w-5xl mx-auto pb-12 ${isFreePlan ? 'opacity-30 pointer-events-none select-none' : ''}`}>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Cupons de Desconto</h1>
           <p className="text-gray-500">Crie códigos promocionais para seus clientes.</p>
@@ -271,6 +282,7 @@ export default function CouponsPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

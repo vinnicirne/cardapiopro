@@ -22,8 +22,13 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
   const [paymentMethod, setPaymentMethod] = useState<'money' | 'card' | 'pix'>('pix');
   const [changeFor, setChangeFor] = useState('');
   const [isBlocked, setIsBlocked] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
   const [loadingCustomer, setLoadingCustomer] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  
+  // Pre-order state
+  const [desiredDate, setDesiredDate] = useState('');
+  const hasPreorderItems = items.some(item => item.product.is_preorder);
 
   // Delivery Areas
   const [deliveryAreas, setDeliveryAreas] = useState<any[]>([]);
@@ -53,6 +58,24 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
             
           if (areasData && areasData.length > 0) {
             setDeliveryAreas(areasData);
+          }
+
+          // Verificar limite de pedidos se a loja estiver no plano grátis
+          const { data: storeWithPlan } = await supabase.from('stores').select('*, subscriptions(plans(*))').eq('id', data.id).single();
+          const plan = storeWithPlan ? (Array.isArray(storeWithPlan.subscriptions) ? storeWithPlan.subscriptions[0]?.plans : storeWithPlan.subscriptions?.plans) : null;
+          
+          if (plan && plan.price <= 0) {
+            // Contar pedidos deste mes
+            const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
+            const { count } = await supabase
+              .from('orders')
+              .select('*', { count: 'exact', head: true })
+              .eq('store_id', data.id)
+              .gte('created_at', startOfMonth);
+            
+            if (count !== null && count >= 15) {
+              setLimitReached(true);
+            }
           }
         }
       };
@@ -273,8 +296,9 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
       let addressText = orderType === 'delivery' ? `\n*Endereço:* ${address}` : '';
       let feeText = orderType === 'delivery' ? `\n*Subtotal:* R$ ${baseTotal.toFixed(2)}\n*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}` : '';
       let discountText = discountAmount > 0 ? `\n*Desconto (${appliedCoupon.code}):* - R$ ${discountAmount.toFixed(2)}` : '';
+      let preorderText = hasPreorderItems && desiredDate ? `\n\n📦 *ENCOMENDA PARA:* ${desiredDate}` : '';
 
-      const message = `*NOVO PEDIDO!*\n${orderTypeText}\n\n*Cliente:* ${name}\n*Telefone:* ${phone}${addressText}\n\n*Itens:*\n${itemsText}${feeText}${discountText}\n\n*Total:* R$ ${finalTotal.toFixed(2)}\n*Pagamento:* ${paymentText}`;
+      const message = `*NOVO PEDIDO!*\n${orderTypeText}${preorderText}\n\n*Cliente:* ${name}\n*Telefone:* ${phone}${addressText}\n\n*Itens:*\n${itemsText}${feeText}${discountText}\n\n*Total:* R$ ${finalTotal.toFixed(2)}\n*Pagamento:* ${paymentText}`;
 
       // Limpar formatação do telefone da loja (remover parênteses, traços, espaços)
       const cleanStorePhone = storePhone.replace(/\D/g, '');
@@ -440,6 +464,25 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
               <label className="block text-sm font-medium text-gray-700 mb-1">Seu Nome</label>
               <input type="text" value={name} onChange={e => setName(e.target.value)} disabled={isBlocked} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none disabled:bg-gray-100" placeholder="Como quer ser chamado?" />
             </div>
+
+            {hasPreorderItems && (
+              <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+                <label className="block text-sm font-bold text-orange-900 mb-2">
+                  📦 Data e Horário Desejados
+                </label>
+                <p className="text-xs text-orange-700 mb-3">
+                  Você possui itens sob encomenda no carrinho. Por favor, informe quando deseja receber/retirar.
+                </p>
+                <input 
+                  type="text" 
+                  value={desiredDate} 
+                  onChange={e => setDesiredDate(e.target.value)} 
+                  disabled={isBlocked} 
+                  className="w-full border border-orange-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 outline-none disabled:bg-gray-100" 
+                  placeholder="Ex: Sexta-feira dia 20, às 14h00" 
+                />
+              </div>
+            )}
             
             {/* Delivery Option */}
             <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
@@ -536,9 +579,14 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
         </div>
 
         <div className="p-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
+          {limitReached && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-100 text-red-600 rounded-lg text-sm text-center font-medium">
+              A loja atingiu o limite de pedidos do mês. Não é possível realizar novos pedidos no momento.
+            </div>
+          )}
           <button 
             onClick={handleCheckout}
-            disabled={items.length === 0 || !phone || !name || (orderType === 'delivery' && (!address || (deliveryAreas.length > 0 && !selectedAreaId))) || isBlocked || submitting}
+            disabled={items.length === 0 || !phone || !name || (orderType === 'delivery' && (!address || (deliveryAreas.length > 0 && !selectedAreaId))) || isBlocked || submitting || limitReached || (hasPreorderItems && !desiredDate)}
             className="w-full bg-primary hover:bg-primary disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl py-3 font-medium flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
             {submitting ? 'Processando...' : 'Enviar Pedido via WhatsApp'}

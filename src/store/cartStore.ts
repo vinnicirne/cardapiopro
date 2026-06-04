@@ -8,6 +8,8 @@ export interface Product {
   originalPrice?: number;
   categoryId: string;
   imageUrl?: string;
+  is_preorder?: boolean;
+  preorder_notice?: string;
 }
 
 export interface SelectedOption {

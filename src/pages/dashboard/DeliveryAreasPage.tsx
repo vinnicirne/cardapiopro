@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Search, MapPin, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, MapPin, X, Lock } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../store/authStore';
+import PremiumFeatureOverlay from '../../components/dashboard/PremiumFeatureOverlay';
 
 export interface DeliveryArea {
   id: string;
@@ -95,18 +96,31 @@ export default function DeliveryAreasPage() {
 
   if (loading) return <div className="p-8 text-center text-gray-500">Carregando áreas...</div>;
 
+  // Limite de 2 áreas no plano grátis
+  const isFreePlan = !store?.plan || store.plan.price <= 0;
+  const isLimitReached = isFreePlan && areas.length >= 2;
+
+  const handleCreateAction = () => {
+    if (isLimitReached) {
+      alert('Você atingiu o limite de 2 Áreas de Entrega do plano grátis. Faça upgrade para adicionar áreas ilimitadas!');
+      return;
+    }
+    openNewModal();
+  };
+
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Áreas de Entrega</h1>
-          <p className="text-gray-500">Gerencie as regiões atendidas e taxas de entrega.</p>
-        </div>
-        <button 
-          onClick={openNewModal}
-          className="bg-primary hover:bg-primary text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors cursor-pointer"
-        >
-          <Plus className="w-4 h-4" /> Nova Área
+    <div className="relative h-full">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Áreas de Entrega</h1>
+            <p className="text-gray-500">Gerencie as regiões atendidas e taxas de entrega.</p>
+          </div>
+          <button 
+            onClick={handleCreateAction}
+            className={`${isLimitReached ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-primary hover:bg-primary text-white cursor-pointer'} px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors`}
+          >
+          {isLimitReached ? <Lock className="w-4 h-4" /> : <Plus className="w-4 h-4" />} Nova Área
         </button>
       </div>
 
@@ -201,6 +215,7 @@ export default function DeliveryAreasPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

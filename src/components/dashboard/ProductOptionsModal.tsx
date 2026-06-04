@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Plus, Trash2, GripVertical, Settings2 } from 'lucide-react';
+import { X, Plus, Trash2, GripVertical } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 export interface OptionGroup {
@@ -27,7 +27,6 @@ interface ProductOptionsModalProps {
 export default function ProductOptionsModal({ isOpen, onClose, productId, productName }: ProductOptionsModalProps) {
   const [groups, setGroups] = useState<OptionGroup[]>([]);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (isOpen && productId) {

@@ -30,10 +30,10 @@ export default function AdminLayout() {
         } md:translate-x-0 fixed md:static inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 flex flex-col text-white transition-transform duration-300 ease-in-out`}
       >
         <div className="p-6 border-b border-slate-800 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <Shield className="w-6 h-6 text-primary" />
-            Superadmin
-          </h1>
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="Cardápio Pro Logo" className="h-10 w-auto" />
+            <span className="text-xl font-bold text-white">Admin</span>
+          </div>
           <button 
             className="md:hidden text-slate-400 hover:text-white"
             onClick={() => setIsMobileMenuOpen(false)}

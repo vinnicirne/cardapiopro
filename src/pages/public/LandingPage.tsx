@@ -1,4 +1,4 @@
-import { ArrowRight, Smartphone, Zap, ChartBar, CheckCircle2, Menu } from 'lucide-react';
+import { ArrowRight, Smartphone, Zap, ChartBar, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
@@ -7,7 +7,7 @@ import { usePlatformStore } from '../../store/platformStore';
 export default function LandingPage() {
   const { settings } = usePlatformStore();
   const [plans, setPlans] = useState<any[]>([]);
-  const platformName = settings?.platform_name || 'SaaS Cardápio';
+  const platformName = settings?.platform_name || 'Cardápio Pro';
 
   useEffect(() => {
     async function loadPlans() {
@@ -192,11 +192,14 @@ export default function LandingPage() {
                     ))}
                   </ul>
                   
-                  <Link to="/dashboard" className={`w-full py-4 rounded-xl text-center font-medium transition-colors ${
-                    isPro 
-                      ? 'bg-primary hover:bg-primary text-white shadow-lg' 
-                      : 'bg-white/10 hover:bg-white/20 text-white'
-                  }`}>
+                  <Link 
+                    to={plan.price > 0 && plan.payment_link ? `/register?checkout=${encodeURIComponent(plan.payment_link)}` : '/register'} 
+                    className={`w-full py-4 rounded-xl text-center font-medium transition-colors ${
+                      isPro 
+                        ? 'bg-primary hover:bg-orange-600 text-white shadow-lg' 
+                        : 'bg-white/10 hover:bg-white/20 text-white'
+                    }`}
+                  >
                     {plan.price <= 0 ? 'Começar Grátis' : 'Assinar Agora'}
                   </Link>
                 </div>

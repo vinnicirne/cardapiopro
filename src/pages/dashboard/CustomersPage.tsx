@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../store/authStore';
-import { Search, Ban, History, UserX, UserCheck } from 'lucide-react';
+import { Search, UserX, UserCheck } from 'lucide-react';
 
 export default function CustomersPage() {
   const { store } = useAuthStore();

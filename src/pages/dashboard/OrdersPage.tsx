@@ -273,8 +273,9 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="h-full flex flex-col print:hidden">
-      <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
+    <div className="h-full flex flex-col">
+      <div className="h-full flex flex-col print:hidden">
+        <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gestão de Pedidos</h1>
           <p className="text-sm text-gray-500 mt-1">Acompanhe e gerencie os pedidos de hoje em tempo real.</p>
@@ -413,6 +414,7 @@ export default function OrdersPage() {
               </div>
             );
           })}
+        </div>
         </div>
       </div>
 

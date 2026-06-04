@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Plus, Edit2, Check, X, AlertCircle } from 'lucide-react';
+import { Plus, Edit2, Check, AlertCircle } from 'lucide-react';
 
 interface Plan {
   id: string;
@@ -10,6 +10,7 @@ interface Plan {
   max_products: number;
   features: string[];
   active: boolean;
+  payment_link?: string;
 }
 
 export default function PlansManagerPage() {
@@ -24,6 +25,7 @@ export default function PlansManagerPage() {
   const [maxProducts, setMaxProducts] = useState(-1);
   const [features, setFeatures] = useState('');
   const [active, setActive] = useState(true);
+  const [paymentLink, setPaymentLink] = useState('');
   const [formError, setFormError] = useState('');
 
   useEffect(() => {
@@ -51,6 +53,7 @@ export default function PlansManagerPage() {
     setMaxProducts(plan.max_products);
     setFeatures(plan.features ? plan.features.join('\n') : '');
     setActive(plan.active);
+    setPaymentLink(plan.payment_link || '');
     setFormError('');
   };
 
@@ -62,6 +65,7 @@ export default function PlansManagerPage() {
     setMaxProducts(-1);
     setFeatures('');
     setActive(true);
+    setPaymentLink('');
     setFormError('');
   };
 
@@ -77,7 +81,8 @@ export default function PlansManagerPage() {
       price,
       max_products: maxProducts,
       features: featuresArray,
-      active
+      active,
+      payment_link: paymentLink || null
     };
 
     if (isEditing) {
@@ -140,6 +145,12 @@ export default function PlansManagerPage() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
             <input type="text" value={description} onChange={e => setDescription(e.target.value)} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary outline-none" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Link de Pagamento (Kiwify Checkout URL)</label>
+            <input type="url" placeholder="https://pay.kiwify.com.br/..." value={paymentLink} onChange={e => setPaymentLink(e.target.value)} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary outline-none" />
+            <p className="text-xs text-gray-500 mt-1">Deixe em branco para planos gratuitos.</p>
           </div>
 
           <div>

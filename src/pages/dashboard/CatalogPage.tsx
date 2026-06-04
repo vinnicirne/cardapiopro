@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Plus, Edit2, Trash2, Search, Package, Tags, Image as ImageIcon, Upload, X, Settings2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, Package, Tags, Image as ImageIcon, Upload, X, Settings2, Lock } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../store/authStore';
 import imageCompression from 'browser-image-compression';
@@ -19,6 +19,8 @@ export interface Product {
   originalPrice?: number;
   categoryId: string;
   imageUrl?: string;
+  is_preorder?: boolean;
+  preorder_notice?: string;
 }
 
 export default function CatalogPage() {
@@ -45,6 +47,9 @@ export default function CatalogPage() {
   const [categoryId, setCategoryId] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [categoryName, setCategoryName] = useState('');
+  
+  const [isPreorder, setIsPreorder] = useState(false);
+  const [preorderNotice, setPreorderNotice] = useState('');
 
   // Image Upload State
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -178,6 +183,8 @@ export default function CatalogPage() {
     setOriginalPrice('');
     setCategoryId(categories[0]?.id || '');
     setImageUrl('');
+    setIsPreorder(false);
+    setPreorderNotice('');
     setImageFile(null);
     setImagePreview('');
     setIsProductModalOpen(true);
@@ -191,6 +198,8 @@ export default function CatalogPage() {
     setOriginalPrice(product.originalPrice ? product.originalPrice.toString() : '');
     setCategoryId(product.categoryId);
     setImageUrl(product.imageUrl || '');
+    setIsPreorder(product.is_preorder || false);
+    setPreorderNotice(product.preorder_notice || '');
     setImageFile(null);
     setImagePreview('');
     setIsProductModalOpen(true);
@@ -217,7 +226,9 @@ export default function CatalogPage() {
         description,
         price: parsedPrice,
         original_price: parsedOriginal,
-        image_url: finalImageUrl
+        image_url: finalImageUrl,
+        is_preorder: isPreorder,
+        preorder_notice: isPreorder ? preorderNotice : null
       };
 
       if (editingProduct) {
@@ -249,6 +260,20 @@ export default function CatalogPage() {
 
   if (loading) return <div className="p-8 text-center text-gray-500">Carregando catálogo...</div>;
 
+  const isProductLimitReached = store?.plan && store.plan.max_products !== -1 && products.length >= store.plan.max_products;
+
+  const handleCreateAction = () => {
+    if (activeTab === 'products') {
+      if (isProductLimitReached) {
+        alert(`Você atingiu o limite de ${store.plan?.max_products} produtos do seu plano. Faça upgrade para adicionar mais!`);
+        return;
+      }
+      openNewProductModal();
+    } else {
+      openNewCategoryModal();
+    }
+  };
+
   return (
     <div className="max-w-5xl mx-auto pb-12">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -257,10 +282,14 @@ export default function CatalogPage() {
           <p className="text-gray-500">Gerencie os produtos e categorias da sua loja.</p>
         </div>
         <button 
-          onClick={activeTab === 'products' ? openNewProductModal : openNewCategoryModal}
-          className="bg-primary hover:bg-primary text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors cursor-pointer"
+          onClick={handleCreateAction}
+          className={`${
+            activeTab === 'products' && isProductLimitReached 
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+              : 'bg-primary hover:bg-primary text-white cursor-pointer'
+          } px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors`}
         >
-          <Plus className="w-4 h-4" /> 
+          {activeTab === 'products' && isProductLimitReached ? <Lock className="w-4 h-4" /> : <Plus className="w-4 h-4" />} 
           {activeTab === 'products' ? 'Novo Produto' : 'Nova Categoria'}
         </button>
       </div>
@@ -473,6 +502,24 @@ export default function CatalogPage() {
                     ))}
                   </select>
                 </div>
+
+              {/* Pre-order fields */}
+              <div className="bg-orange-50 border border-orange-100 p-4 rounded-xl space-y-3 mt-4">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={isPreorder} onChange={e => setIsPreorder(e.target.checked)} className="w-5 h-5 text-orange-600 rounded focus:ring-orange-500 border-gray-300" />
+                  <div>
+                    <span className="font-semibold text-orange-900 block">Produto Sob Encomenda</span>
+                    <span className="text-sm text-orange-700 block">Exigir data/horário na finalização do pedido</span>
+                  </div>
+                </label>
+                
+                {isPreorder && (
+                  <div className="pt-2 pl-8">
+                    <label className="block text-sm font-medium text-orange-900 mb-1">Aviso / Prazo de Produção</label>
+                    <input type="text" placeholder="Ex: Necessário 3 dias de antecedência" value={preorderNotice} onChange={e => setPreorderNotice(e.target.value)} className="w-full border border-orange-200 bg-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 outline-none text-sm" />
+                  </div>
+                )}
+              </div>
 
               <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mt-4">
                 <div className="flex gap-3">

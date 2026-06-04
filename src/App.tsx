@@ -5,6 +5,7 @@ import DashboardLayout from './pages/dashboard/DashboardLayout';
 import CatalogPage from './pages/dashboard/CatalogPage';
 import DeliveryAreasPage from './pages/dashboard/DeliveryAreasPage';
 import StoreSettingsPage from './pages/dashboard/StoreSettingsPage';
+import SubscriptionPage from './pages/dashboard/SubscriptionPage';
 import CustomersPage from './pages/dashboard/CustomersPage';
 import CouponsPage from './pages/dashboard/CouponsPage';
 import OrdersPage from './pages/dashboard/OrdersPage';
@@ -24,10 +25,6 @@ import { usePlatformStore } from './store/platformStore';
 
 import PlatformSettingsPage from './pages/admin/PlatformSettingsPage';
 
-// Placeholder Pages
-const StoreDashboard = () => <div className="text-gray-500">Selecione uma opção no menu lateral.</div>;
-const AdminDashboard = () => <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center"><h1 className="text-2xl font-bold">Admin Dashboard</h1></div>;
-
 function App() {
   const { setUser, setStore, setLoading } = useAuthStore();
   const { fetchSettings } = usePlatformStore();
@@ -38,8 +35,13 @@ function App() {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        const { data } = await supabase.from('stores').select('*').eq('owner_id', session.user.id).single();
-        setStore(data);
+        const { data } = await supabase.from('stores').select('*, subscriptions(plans(*))').eq('owner_id', session.user.id).single();
+        if (data) {
+          const plan = (Array.isArray(data.subscriptions) ? data.subscriptions[0]?.plans : data.subscriptions?.plans) || null;
+          const storeData = { ...data, plan };
+          delete storeData.subscriptions;
+          setStore(storeData);
+        }
       }
       setLoading(false);
     });
@@ -47,8 +49,13 @@ function App() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        const { data } = await supabase.from('stores').select('*').eq('owner_id', session.user.id).single();
-        setStore(data);
+        const { data } = await supabase.from('stores').select('*, subscriptions(plans(*))').eq('owner_id', session.user.id).single();
+        if (data) {
+          const plan = (Array.isArray(data.subscriptions) ? data.subscriptions[0]?.plans : data.subscriptions?.plans) || null;
+          const storeData = { ...data, plan };
+          delete storeData.subscriptions;
+          setStore(storeData);
+        }
       } else {
         setStore(null);
       }
@@ -74,6 +81,7 @@ function App() {
             <Route path="catalog" element={<CatalogPage />} />
             <Route path="delivery-areas" element={<DeliveryAreasPage />} />
             <Route path="customers" element={<CustomersPage />} />
+            <Route path="subscription" element={<SubscriptionPage />} />
             <Route path="coupons" element={<CouponsPage />} />
             <Route path="settings" element={<StoreSettingsPage />} />
           </Route>

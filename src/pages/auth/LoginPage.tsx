@@ -39,13 +39,20 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Entrar no seu Painel</h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Ou{' '}
-          <Link to="/register" className="font-medium text-primary hover:text-primary">
-            crie sua conta gratuitamente
-          </Link>
-        </p>
+        <div className="text-center">
+          <div className="mx-auto h-20 w-auto mb-4 flex items-center justify-center">
+            <img src="/logo.png" alt="Cardápio Pro Logo" className="h-full object-contain" />
+          </div>
+          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+            Acesso ao Painel
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Ou{' '}
+            <Link to="/register" className="font-medium text-primary hover:text-primary-dark">
+              crie sua conta gratuitamente
+            </Link>
+          </p>
+        </div>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
