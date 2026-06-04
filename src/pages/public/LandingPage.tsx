@@ -38,7 +38,9 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-6">
             <a href="#recursos" className="text-sm font-medium text-slate-300 hover:text-white transition-colors hidden md:block">Recursos</a>
+            <a href="#depoimentos" className="text-sm font-medium text-slate-300 hover:text-white transition-colors hidden md:block">Depoimentos</a>
             <a href="#precos" className="text-sm font-medium text-slate-300 hover:text-white transition-colors hidden md:block">Preços</a>
+            <a href="#faq" className="text-sm font-medium text-slate-300 hover:text-white transition-colors hidden md:block">FAQ</a>
             <Link to="/dashboard" className="text-sm font-medium hover:text-orange-400 transition-colors">Entrar</Link>
             <Link to="/dashboard" className="text-sm font-medium px-5 py-2.5 rounded-full bg-white text-slate-950 hover:bg-orange-50 transition-colors">
               Testar Grátis
