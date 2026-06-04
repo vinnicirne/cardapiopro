@@ -1,4 +1,4 @@
-import { ArrowRight, Smartphone, Zap, ChartBar, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Smartphone, Zap, ChartBar, CheckCircle2, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
@@ -69,7 +69,7 @@ export default function LandingPage() {
                 Criar meu cardápio
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link to="/cardapio/demo" className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-lg transition-all backdrop-blur-sm">
+              <Link to="/demo" className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-lg transition-all backdrop-blur-sm">
                 Ver demonstração
               </Link>
             </div>
@@ -130,6 +130,62 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-xl font-bold mb-4">{feature.title}</h3>
                 <p className="text-slate-400 leading-relaxed">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-24 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">O que os lojistas dizem</h2>
+            <p className="text-slate-400 text-lg">Junte-se aos empreendedores que revolucionaram seu delivery com o {platformName}.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "João Silva",
+                role: "Dono da Burger House",
+                content: "Aumentei minhas vendas em 40% só no primeiro mês. O sistema de pedidos no WhatsApp é perfeito, muito mais ágil que ficar respondendo texto por texto.",
+                rating: 5,
+                image: "11"
+              },
+              {
+                name: "Maria Costa",
+                role: "Sushi em Casa",
+                content: "Os clientes adoram a experiência visual. Fica muito fácil deles adicionarem os opcionais e o carrinho já soma tudo automático. Reduziu meus erros de entrega a zero.",
+                rating: 5,
+                image: "43"
+              },
+              {
+                name: "Roberto Nunes",
+                role: "Pizzaria Napoli",
+                content: "Eu pagava taxas altíssimas no iFood. Desde que migrei os clientes fiéis para o meu próprio link da plataforma, minha margem de lucro dobrou. Recomendo demais!",
+                rating: 5,
+                image: "32"
+              }
+            ].map((testimonial, i) => (
+              <div key={i} className="p-8 rounded-3xl bg-slate-900/50 border border-white/10 relative">
+                <div className="flex gap-1 mb-4 text-orange-400">
+                  {Array.from({ length: testimonial.rating }).map((_, j) => (
+                    <Star key={j} className="w-5 h-5 fill-current" />
+                  ))}
+                </div>
+                <p className="text-slate-300 mb-6 italic leading-relaxed">"{testimonial.content}"</p>
+                <div className="flex items-center gap-4">
+                  <img 
+                    src={`https://i.pravatar.cc/150?img=${testimonial.image}`} 
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full border border-white/10"
+                  />
+                  <div>
+                    <h4 className="font-bold text-white">{testimonial.name}</h4>
+                    <p className="text-sm text-slate-400">{testimonial.role}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
