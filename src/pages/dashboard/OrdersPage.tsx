@@ -307,6 +307,11 @@ export default function OrdersPage() {
         </div>
       </div>
 
+      <div className="lg:hidden flex items-center justify-center gap-2 text-xs font-medium text-gray-500 mb-3 bg-gray-50 py-2 rounded-lg mx-1">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+        Deslize para os lados para ver outras etapas
+      </div>
+
       <div className="flex-1 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
         <div className="flex lg:grid lg:grid-cols-4 gap-4 h-full min-w-full w-max lg:w-full">
           {STATUS_COLUMNS.map(column => {
