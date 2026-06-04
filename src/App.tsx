@@ -25,6 +25,8 @@ import { usePlatformStore } from './store/platformStore';
 
 import PlatformSettingsPage from './pages/admin/PlatformSettingsPage';
 
+import { ReloadPrompt } from './components/pwa/ReloadPrompt';
+
 function App() {
   const { setUser, setStore, setLoading } = useAuthStore();
   const { fetchSettings } = usePlatformStore();
@@ -66,44 +68,47 @@ function App() {
   }, [setUser, setStore, setLoading]);
 
   return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/:storeSlug" element={<StoreMenu />} />
-        
-        {/* Store Dashboard Routes */}
-        <Route path="/dashboard" element={<ProtectedRoute />}>
-          <Route element={<DashboardLayout />}>
-            <Route index element={<Navigate to="/dashboard/orders" replace />} />
-            <Route path="orders" element={<OrdersPage />} />
-            <Route path="catalog" element={<CatalogPage />} />
-            <Route path="delivery-areas" element={<DeliveryAreasPage />} />
-            <Route path="customers" element={<CustomersPage />} />
-            <Route path="subscription" element={<SubscriptionPage />} />
-            <Route path="coupons" element={<CouponsPage />} />
-            <Route path="settings" element={<StoreSettingsPage />} />
+    <>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/:storeSlug" element={<StoreMenu />} />
+          
+          {/* Store Dashboard Routes */}
+          <Route path="/dashboard" element={<ProtectedRoute />}>
+            <Route element={<DashboardLayout />}>
+              <Route index element={<Navigate to="/dashboard/orders" replace />} />
+              <Route path="orders" element={<OrdersPage />} />
+              <Route path="catalog" element={<CatalogPage />} />
+              <Route path="delivery-areas" element={<DeliveryAreasPage />} />
+              <Route path="customers" element={<CustomersPage />} />
+              <Route path="subscription" element={<SubscriptionPage />} />
+              <Route path="coupons" element={<CouponsPage />} />
+              <Route path="settings" element={<StoreSettingsPage />} />
+            </Route>
           </Route>
-        </Route>
-        
-        {/* Admin Routes */}
-        <Route path="/admin" element={<AdminRoute />}>
-          <Route element={<AdminLayout />}>
-            <Route index element={<StoresManagerPage />} />
-            <Route path="plans" element={<PlansManagerPage />} />
-            <Route path="buyers" element={<BuyersManagerPage />} />
-            <Route path="customers" element={<GlobalCustomersManagerPage />} />
-            <Route path="settings" element={<PlatformSettingsPage />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<StoresManagerPage />} />
+              <Route path="plans" element={<PlansManagerPage />} />
+              <Route path="buyers" element={<BuyersManagerPage />} />
+              <Route path="customers" element={<GlobalCustomersManagerPage />} />
+              <Route path="settings" element={<PlatformSettingsPage />} />
+            </Route>
           </Route>
-        </Route>
 
-        {/* Fallback */}
-        {/* Landing Page */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Router>
+          {/* Fallback */}
+          {/* Landing Page */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
+      <ReloadPrompt />
+    </>
   );
 }
 
