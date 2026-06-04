@@ -35,7 +35,7 @@ export default function RegisterPage() {
 
     if (authData.user) {
       // 2. Criar a loja no banco
-      const { error: storeError } = await supabase
+      const { data: storeData, error: storeError } = await supabase
         .from('stores')
         .insert([{
           owner_id: authData.user.id,

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Search, MapPin, X, Lock } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../store/authStore';
-import PremiumFeatureOverlay from '../../components/dashboard/PremiumFeatureOverlay';
 
 export interface DeliveryArea {
   id: string;
