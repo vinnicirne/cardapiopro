@@ -38,17 +38,5 @@ BEGIN
       (v_store_id, v_cat_bebidas, 'Refrigerante Cola Lata 350ml', 'Geladíssimo.', 6.50, NULL, 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=600&auto=format&fit=crop', false),
       (v_store_id, v_cat_bebidas, 'Milkshake de Morango 400ml', 'Feito com sorvete artesanal, morangos frescos e muita calda.', 18.90, NULL, 'https://images.unsplash.com/photo-1579954115545-a95591f28bfc?q=80&w=600&auto=format&fit=crop', false);
       
-    -- Inserir Horário Falso (Sempre Aberta)
-    -- NOTA: Você pode precisar ajustar dependendo da estrutura exata de store_hours se existir
-    INSERT INTO public.store_hours (store_id, day_of_week, open_time, close_time, is_closed)
-    VALUES 
-      (v_store_id, 0, '00:00', '23:59', false),
-      (v_store_id, 1, '00:00', '23:59', false),
-      (v_store_id, 2, '00:00', '23:59', false),
-      (v_store_id, 3, '00:00', '23:59', false),
-      (v_store_id, 4, '00:00', '23:59', false),
-      (v_store_id, 5, '00:00', '23:59', false),
-      (v_store_id, 6, '00:00', '23:59', false);
-
   END IF;
 END $$;
