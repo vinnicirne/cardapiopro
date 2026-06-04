@@ -307,14 +307,14 @@ export default function OrdersPage() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-x-auto pb-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 h-full min-w-full">
+      <div className="flex-1 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+        <div className="flex lg:grid lg:grid-cols-4 gap-4 h-full min-w-full w-max lg:w-full">
           {STATUS_COLUMNS.map(column => {
             const columnOrders = orders.filter(o => o.status === column.id);
             const Icon = column.icon;
             
             return (
-              <div key={column.id} className="flex flex-col bg-gray-50/50 rounded-2xl border border-gray-200 overflow-hidden h-full">
+              <div key={column.id} className="flex flex-col bg-gray-50/50 rounded-2xl border border-gray-200 overflow-hidden h-full w-[85vw] sm:w-[45vw] lg:w-auto shrink-0 snap-center">
                 {/* Column Header */}
                 <div className={`p-4 border-b ${column.color} flex items-center justify-between sticky top-0 z-10`}>
                   <div className="flex items-center gap-2">

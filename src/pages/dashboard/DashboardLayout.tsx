@@ -9,6 +9,7 @@ export default function DashboardLayout() {
   const location = useLocation();
   const { store, isSuperadmin } = useAuthStore();
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -75,8 +76,8 @@ export default function DashboardLayout() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Mobile Header */}
-        <header className="bg-white border-b border-gray-200 p-4 flex items-center gap-4 md:hidden">
-          <button className="text-gray-600 cursor-pointer">
+        <header className="bg-white border-b border-gray-200 p-4 flex items-center gap-4 md:hidden shrink-0">
+          <button onClick={() => setIsMobileMenuOpen(true)} className="text-gray-600 hover:bg-gray-100 p-1.5 rounded-lg transition-colors cursor-pointer">
             <Menu className="w-6 h-6" />
           </button>
           <h1 className="text-lg font-bold text-gray-900 truncate">{store?.name || 'Carregando...'}</h1>
@@ -89,6 +90,63 @@ export default function DashboardLayout() {
 
       {/* Modais Globais do Dashboard */}
       {isQrModalOpen && <QrCodeModal onClose={() => setIsQrModalOpen(false)} />}
+
+      {/* Mobile Menu Drawer */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] flex md:hidden">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={() => setIsMobileMenuOpen(false)}></div>
+          <aside className="relative w-64 max-w-[80vw] bg-white h-full flex flex-col shadow-2xl animate-in slide-in-from-left">
+            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+              <img src="/logo.png" alt="Cardápio Pro" className="h-8 w-auto" />
+              <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 -mr-2 text-gray-500 hover:bg-gray-100 rounded-lg">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+            <div className="p-4 border-b border-gray-100 bg-gray-50/50">
+              <h2 className="text-sm font-bold text-gray-900 truncate" title={store?.name}>{store?.name || 'Carregando...'}</h2>
+              <p className="text-xs text-gray-500">Área do Lojista</p>
+            </div>
+            <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+              {navItems.map(item => {
+                const isActive = location.pathname === item.path || (item.path !== '/dashboard' && location.pathname.startsWith(item.path));
+                return (
+                  <Link 
+                    key={item.path} 
+                    to={item.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${isActive ? 'bg-orange-50 text-primary' : 'text-gray-600 hover:bg-gray-50'}`}
+                  >
+                    {item.icon}
+                    {item.name}
+                  </Link>
+                )
+              })}
+              <button 
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsQrModalOpen(true);
+                }}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-600 hover:bg-gray-50 w-full transition-colors text-left"
+              >
+                <QrCode className="w-5 h-5 text-gray-500" />
+                Meu QR Code
+              </button>
+            </nav>
+            <div className="p-4 border-t border-gray-200 space-y-2">
+              {isSuperadmin && (
+                <Link onClick={() => setIsMobileMenuOpen(false)} to="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-white bg-slate-900 hover:bg-slate-800 w-full transition-colors">
+                  <Shield className="w-5 h-5 text-orange-500" />
+                  Painel Global
+                </Link>
+              )}
+              <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-600 hover:bg-gray-50 w-full transition-colors cursor-pointer">
+                <LogOut className="w-5 h-5" />
+                Sair
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 }
