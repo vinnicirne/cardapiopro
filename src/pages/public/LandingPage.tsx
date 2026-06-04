@@ -69,9 +69,9 @@ export default function LandingPage() {
                 Criar meu cardápio
                 <ArrowRight className="w-5 h-5" />
               </Link>
-              <a href="#demo" className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-lg transition-all backdrop-blur-sm">
+              <Link to="/cardapio/demo" className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-lg transition-all backdrop-blur-sm">
                 Ver demonstração
-              </a>
+              </Link>
             </div>
             
             <div className="mt-12 flex items-center gap-4 text-sm text-slate-400">
