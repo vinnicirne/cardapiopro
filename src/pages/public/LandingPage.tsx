@@ -137,7 +137,7 @@ export default function LandingPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 border-t border-white/5">
+      <section id="depoimentos" className="py-24 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-6">O que os lojistas dizem</h2>
@@ -267,6 +267,53 @@ export default function LandingPage() {
                 <p>Nenhum plano ativo encontrado. Adicione planos no painel Admin.</p>
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-24 border-t border-white/5 bg-slate-900/50">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">Perguntas Frequentes</h2>
+            <p className="text-slate-400 text-lg">Tudo que você precisa saber antes de começar.</p>
+          </div>
+          
+          <div className="space-y-4">
+            {[
+              {
+                q: "Preciso baixar algum aplicativo?",
+                a: "Não! O seu cardápio funciona 100% no navegador do cliente (celular ou computador). Não há necessidade de baixar nada."
+              },
+              {
+                q: "Como recebo os pedidos?",
+                a: "Os pedidos podem ser enviados diretamente para o seu WhatsApp já formatados, ou se preferir, você pode acompanhar pelo painel interno de gestão em tempo real."
+              },
+              {
+                q: "Existe alguma taxa por pedido vendido?",
+                a: "Zero! Nós não cobramos nenhuma taxa sobre as suas vendas. Todo o lucro é 100% seu. Você só paga o valor fixo do plano de assinatura."
+              },
+              {
+                q: "Posso cancelar minha assinatura a qualquer momento?",
+                a: "Com certeza. Nossos planos não têm tempo mínimo de fidelidade. Você pode cancelar sua assinatura com 1 clique direto pelo painel de controle."
+              },
+              {
+                q: "Consigo limitar meu horário de atendimento?",
+                a: "Sim, você pode definir seus horários de abertura e fechamento para cada dia da semana. Fora do horário, o cardápio bloqueia automaticamente o envio de novos pedidos."
+              }
+            ].map((faq, i) => (
+              <details key={i} className="group p-6 rounded-2xl bg-white/5 border border-white/10 [&_summary::-webkit-details-marker]:hidden cursor-pointer">
+                <summary className="flex items-center justify-between font-bold text-lg text-white list-none">
+                  {faq.q}
+                  <span className="transition group-open:rotate-180 text-orange-400">
+                    <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+                  </span>
+                </summary>
+                <p className="text-slate-400 mt-4 leading-relaxed pl-2">
+                  {faq.a}
+                </p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
