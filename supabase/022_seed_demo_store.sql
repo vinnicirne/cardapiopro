@@ -6,9 +6,9 @@
 
 DO $$
 DECLARE
-  v_store_id UUID := 'd3m00000-0000-0000-0000-000000000000';
-  v_cat_lanches UUID := 'c4t11111-0000-0000-0000-000000000000';
-  v_cat_bebidas UUID := 'c4t22222-0000-0000-0000-000000000000';
+  v_store_id UUID := 'de300000-0000-0000-0000-000000000000';
+  v_cat_lanches UUID := 'ca711111-0000-0000-0000-000000000000';
+  v_cat_bebidas UUID := 'ca722222-0000-0000-0000-000000000000';
 BEGIN
   -- Se a loja 'demo' não existir, cria a loja e os produtos
   IF NOT EXISTS (SELECT 1 FROM public.stores WHERE slug = 'demo') THEN

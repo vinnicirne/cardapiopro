@@ -6,6 +6,7 @@ Registro cronológico de mudanças estruturais, otimizações e correções do s
 - **Mudanças Estruturais:**
   - Implementação de funcionalidade de Encomendas (Pre-orders). Adicionado campos `is_preorder` e `preorder_notice` na tabela `products`.
   - Sistema exige entrada de Data e Horário na finalização da compra (CheckoutModal) quando itens sob encomenda estão no carrinho.
+  - Criação da Loja de Demonstração pública (botão na Landing Page aponta para `/cardapio/demo`). Loja criada sem `owner_id` para bloquear edições não autorizadas mantendo visualização pública.
   - Correção do join de planos: a consulta em `stores` agora é feita via `subscriptions(plans(*))` evitando falhas HTTP 400.
   - Introdução do "Feature Gating": bloqueio de funções exclusivas (como Cupons) no painel de Lojistas com o Plano Grátis.
 - **Otimizações e Correções:**
