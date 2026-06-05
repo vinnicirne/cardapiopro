@@ -302,6 +302,11 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
 
       // Limpar formatação do telefone da loja (remover parênteses, traços, espaços)
       let cleanStorePhone = storePhone.replace(/\D/g, '');
+      if (cleanStorePhone.startsWith('550')) {
+        cleanStorePhone = '55' + cleanStorePhone.substring(3);
+      } else if (cleanStorePhone.startsWith('0')) {
+        cleanStorePhone = cleanStorePhone.substring(1);
+      }
       if (cleanStorePhone.length === 10 || cleanStorePhone.length === 11) {
         cleanStorePhone = `55${cleanStorePhone}`;
       }

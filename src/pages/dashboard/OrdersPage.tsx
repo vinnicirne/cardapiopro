@@ -539,6 +539,11 @@ export default function OrdersPage() {
               <button 
                 onClick={() => {
                   let cleanPhone = selectedOrder.customer_phone.replace(/\D/g, '');
+                  if (cleanPhone.startsWith('550')) {
+                    cleanPhone = '55' + cleanPhone.substring(3);
+                  } else if (cleanPhone.startsWith('0')) {
+                    cleanPhone = cleanPhone.substring(1);
+                  }
                   if (cleanPhone.length === 10 || cleanPhone.length === 11) {
                     cleanPhone = `55${cleanPhone}`;
                   }
