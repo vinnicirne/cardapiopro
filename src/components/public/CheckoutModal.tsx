@@ -301,7 +301,10 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
       const message = `*NOVO PEDIDO!*\n${orderTypeText}${preorderText}\n\n*Cliente:* ${name}\n*Telefone:* ${phone}${addressText}\n\n*Itens:*\n${itemsText}${feeText}${discountText}\n\n*Total:* R$ ${finalTotal.toFixed(2)}\n*Pagamento:* ${paymentText}`;
 
       // Limpar formatação do telefone da loja (remover parênteses, traços, espaços)
-      const cleanStorePhone = storePhone.replace(/\D/g, '');
+      let cleanStorePhone = storePhone.replace(/\D/g, '');
+      if (cleanStorePhone.length === 10 || cleanStorePhone.length === 11) {
+        cleanStorePhone = `55${cleanStorePhone}`;
+      }
 
       // Create WhatsApp link
       const encodedMessage = encodeURIComponent(message);

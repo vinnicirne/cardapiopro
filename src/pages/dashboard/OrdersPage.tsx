@@ -538,8 +538,12 @@ export default function OrdersPage() {
               </button>
               <button 
                 onClick={() => {
+                  let cleanPhone = selectedOrder.customer_phone.replace(/\D/g, '');
+                  if (cleanPhone.length === 10 || cleanPhone.length === 11) {
+                    cleanPhone = `55${cleanPhone}`;
+                  }
                   const msg = encodeURIComponent(`Olá ${selectedOrder.customer_name}! Somos da loja e vimos seu pedido...`);
-                  window.open(`https://wa.me/${selectedOrder.customer_phone}?text=${msg}`, '_blank');
+                  window.open(`https://wa.me/${cleanPhone}?text=${msg}`, '_blank');
                 }}
                 className="flex-1 py-3 bg-green-500 text-white font-bold font-sans rounded-xl flex items-center justify-center gap-2 hover:bg-green-600 transition-colors cursor-pointer"
               >
