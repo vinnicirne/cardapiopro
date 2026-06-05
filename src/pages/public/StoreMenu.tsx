@@ -86,6 +86,33 @@ export default function StoreMenu() {
     fetchStore();
   }, [storeSlug]);
 
+  const anyModalOpen = isCheckoutOpen || !!selectedProduct || isOrdersModalOpen;
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (window.location.hash !== '#modal') {
+        setIsCheckoutOpen(false);
+        setSelectedProduct(null);
+        setIsOrdersModalOpen(false);
+      }
+    };
+
+    if (anyModalOpen) {
+      if (window.location.hash !== '#modal') {
+        window.history.pushState(null, '', window.location.pathname + window.location.search + '#modal');
+      }
+      window.addEventListener('popstate', handlePopState);
+    } else {
+      if (window.location.hash === '#modal') {
+        window.history.back();
+      }
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [anyModalOpen]);
+
   const totalItems = items.reduce((acc, item) => acc + item.quantity, 0);
   const isOpen = checkStoreOpen(store);
 
