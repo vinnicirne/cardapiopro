@@ -17,6 +17,7 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
+  const [referencePoint, setReferencePoint] = useState('');
   const [orderType, setOrderType] = useState<'delivery' | 'pickup'>('delivery');
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState<'money' | 'card' | 'pix'>('pix');
@@ -235,8 +236,8 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
             change_for: paymentMethod === 'money' && changeFor ? parseFloat(changeFor) : null,
             delivery_address: orderType === 'delivery' 
               ? (selectedAreaId 
-                  ? `${address} - Bairro: ${deliveryAreas.find(a => a.id === selectedAreaId)?.name}` 
-                  : address) 
+                  ? `${address}${referencePoint ? ` - Ref: ${referencePoint}` : ''} - Bairro: ${deliveryAreas.find(a => a.id === selectedAreaId)?.name}` 
+                  : `${address}${referencePoint ? ` - Ref: ${referencePoint}` : ''}`) 
               : null
           });
 
@@ -275,7 +276,7 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
       const itemsText = items.map(item => {
         let text = `${item.quantity}x ${item.product.name} (R$ ${item.product.price.toFixed(2)})`;
         if (item.selectedOptions && item.selectedOptions.length > 0) {
-          text += '\n  ' + item.selectedOptions.map(opt => `+ ${opt.name} (R$ ${opt.price.toFixed(2)})`).join('\n  ');
+          text += '\n  ' + item.selectedOptions.map(opt => `+ ${opt.name}`).join('\n  ');
         }
         if (item.observations) {
           text += `\n  *Obs:* ${item.observations}`;
@@ -293,7 +294,7 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
       }
 
       let orderTypeText = orderType === 'delivery' ? '🛵 *ENTREGA*' : '🛍️ *RETIRADA NO LOCAL*';
-      let addressText = orderType === 'delivery' ? `\n*Endereço:* ${address}` : '';
+      let addressText = orderType === 'delivery' ? `\n*Endereço:* ${address}${referencePoint ? `\n*Ponto de Referência:* ${referencePoint}` : ''}` : '';
       let feeText = orderType === 'delivery' ? `\n*Subtotal:* R$ ${baseTotal.toFixed(2)}\n*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}` : '';
       let discountText = discountAmount > 0 ? `\n*Desconto (${appliedCoupon.code}):* - R$ ${discountAmount.toFixed(2)}` : '';
       let preorderText = hasPreorderItems && desiredDate ? `\n\n📦 *ENCOMENDA PARA:* ${desiredDate}` : '';
@@ -541,7 +542,13 @@ export default function CheckoutModal({ isOpen, onClose, storePhone }: CheckoutM
                   <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
                     <MapPin className="w-4 h-4" /> Endereço Completo
                   </label>
-                  <input type="text" value={address} onChange={e => setAddress(e.target.value)} disabled={isBlocked} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none disabled:bg-gray-100" placeholder="Rua, Número, Ponto de Referência" required={orderType === 'delivery'} />
+                  <input type="text" value={address} onChange={e => setAddress(e.target.value)} disabled={isBlocked} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none disabled:bg-gray-100" placeholder="Rua, Número, Complemento" required={orderType === 'delivery'} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
+                    Ponto de Referência
+                  </label>
+                  <input type="text" value={referencePoint} onChange={e => setReferencePoint(e.target.value)} disabled={isBlocked} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none disabled:bg-gray-100" placeholder="Ex: Perto do mercado..." />
                 </div>
               </div>
             )}
