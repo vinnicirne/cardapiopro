@@ -19,8 +19,8 @@ export default function StoreMenu() {
   // Mock data as default fallback
   const [store, setStore] = useState({
     id: '',
-    name: 'Burger Queen',
-    description: 'Os melhores hambúrgueres artesanais da região.',
+    name: 'Loja',
+    description: '',
     logoUrl: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=150&h=150&fit=crop',
     coverUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&h=400&fit=crop',
     phone: '5511999999999', // Phone for WhatsApp
@@ -51,6 +51,7 @@ export default function StoreMenu() {
           ...prev,
           id: data.id,
           name: data.name || prev.name,
+          description: data.description || prev.description,
           logoUrl: data.logo_url || prev.logoUrl,
           coverUrl: data.cover_url || prev.coverUrl,
           phone: data.phone || prev.phone,

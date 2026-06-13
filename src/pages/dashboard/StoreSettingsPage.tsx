@@ -8,6 +8,7 @@ import ImageCropperModal from '../../components/shared/ImageCropperModal';
 export default function StoreSettingsPage() {
   const { store, setStore } = useAuthStore();
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [slug, setSlug] = useState('');
   const [phone, setPhone] = useState('');
   const [deliveryFee, setDeliveryFee] = useState('');
@@ -46,6 +47,7 @@ export default function StoreSettingsPage() {
   useEffect(() => {
     if (store) {
       setName(store.name);
+      setDescription(store.description || '');
       setSlug(store.slug);
       setPhone(store.phone || '');
       setDeliveryFee(store.delivery_fee ? store.delivery_fee.toString() : '0');
@@ -157,6 +159,7 @@ export default function StoreSettingsPage() {
         .from('stores')
         .update({ 
           name, 
+          description,
           slug: formattedSlug,
           phone,
           delivery_fee: parseFloat(deliveryFee.replace(',', '.')) || 0,
@@ -274,6 +277,17 @@ export default function StoreSettingsPage() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Ex: Pizzaria do Mario"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Descrição (Bio)</label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary min-h-[80px] resize-y"
+                  placeholder="Ex: Os melhores hambúrgueres artesanais da região."
+                />
+                <p className="text-xs text-gray-500 mt-1">Essa frase aparecerá abaixo do nome da sua loja na página pública.</p>
               </div>
 
               <div>

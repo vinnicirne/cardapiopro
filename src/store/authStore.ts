@@ -5,6 +5,7 @@ export interface Store {
   id: string;
   owner_id: string;
   name: string;
+  description?: string;
   slug: string;
   phone?: string;
   logo_url?: string;
